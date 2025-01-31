@@ -109,6 +109,7 @@ class OrderController extends Controller
     {
         $dates = [];
         $currentDate = Carbon::parse($startDate);
+        $endDateParsed = Carbon::parse($endDate);
 
         while ($currentDate <= Carbon::parse($endDate)) {
             $dates[] = $currentDate->toDateString();
@@ -120,7 +121,9 @@ class OrderController extends Controller
                     $currentDate->addDays(2);
                     break;
                 case 'EVERY_OTHER_DAY_TWICE':
-                    $dates[] = $currentDate->copy()->addDay()->toDateString();
+                    if ($currentDate->copy()->addDay() <= $endDateParsed) {
+                        $dates[] = $currentDate->copy()->toDateString();
+                    }
                     $currentDate->addDays(2);
                     break;
             }
